@@ -1,0 +1,27 @@
+Rule 1: Every cell can be full or empty
+Rule 2: If non-empty, every cell can have a value of a power of 2 until the max
+Rule 3: You win when you reach 2048
+Rule 4: You lose when every cell is full and no merges possible
+Rule 6: There are 4 actions possible: up down left right
+Rule 7: A column can be full or not full
+Rule 8: A row can be full or not full
+Rule 9: When going left or right, the not-full rows shift by the number of empty cells in the row
+Rule 10: When going up or down, the not-full columns shift by the number of empty cells in the column
+Rule 11: When left or right, two adjacent cells with the same value on the same row will merge into a value of the sum of both values
+Rule 12: When up or down, two adjacent cells with the same value on the same column will merge into a value of the sum of both values
+Rule 13: When 2 cells merge on a row, the number of not empty cells on the row decreases by 1
+Rule 14: When 2 cells merge on a column, the number of not empty cells on the column decreases by 1
+Rule 15: You can merge more than 2 cells on a row
+Rule 16: You can merge more than 2 cells on a column
+Rule 17: Cells are considered adjacent if they are right beside each other
+Rule 18: Cells are considered adjacent if they are separated by only empty cells
+Rule 19: If a cell is on the border and the action corresponding to that border is done, the cell does not change position
+Rule 20: Each cell is represented by (x, y, v) where x is its row, y is its column and v is its value
+
+Rule 21: Every time an action is performed, a previously empty cell becomes not-empty
+Rule 22: When a not-empty cell appears, the number of not-empty cells on that row increases by 1
+Rule 23: When a not-empty cell appears, the number of not-empty cells on that column increases by 1
+Rule 24: The value of a new cell is 2 or 4
+Rule 25: There is a 90% probability the new cell is 2 and a 10% probability it will be 4
+Rule 26: The new cell cannot appear on an not-empty cell's position
+Rule 27: When a merge is performed, the cell at the position opposite of the action has a value of 0
