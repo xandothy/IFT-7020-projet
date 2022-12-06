@@ -1,5 +1,5 @@
 Going by this, we realize we have as variables:
-1. A grid, defined as 16 cells
+1. A grid, defined as 16 cells (or 4 here)
 2. A list of columns in the grid
 3. A list of rows in the grid
 4. A cell as defined by (x, y, z)
