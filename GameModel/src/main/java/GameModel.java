@@ -1,15 +1,20 @@
-package GameModel.src.main.java;
+//package GameModel.src.main.java;
 
 import org.chocosolver.solver.Model;
+import org.chocosolver.solver.Solution;
 import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
 import org.chocosolver.solver.variables.RealVar;
 import org.chocosolver.solver.variables.SetVar;
+import java.util.Random;
 
 public class GameModel {
 
 
   public static void main(String[] args){
+    // random number generator
+    Random rand = new Random(694201337);
+    
     Model model = new Model("2048Game");
     //we are going to start with a 2x2 model
     IntVar maxValue = model.intVar("maxValue", 16);
@@ -24,11 +29,57 @@ public class GameModel {
     SetVar rows = model.setVar("rows", new int[]{}, new int[]{1, 2});
     BoolVar isAvailable = model.boolVar("isAvailable");
 
+    // Liste de moves
+    IntVar[] moves = new IntVar[1000]; // maximum de 1000 moves mettons
+    for(int q = 0; q < 1000; q++){
+      moves[q] = model.intVar("moves_"+q, 1, 4); // Générer les variables de moves
+    }
+
     IntVar[][] grid = model.intVarMatrix("grid", 2, 2, -1, 16);
+    
+    // iteration sur chaque move
+    for(int i = 1; i <= 1000; i++){
+      // iteration sur chaque élément de la grille
+      for(int x = 1; x <= 2;  x++){
+        for(int y = 1; y <= 2;  y++){
+          // logique de tiles
+        }
+      }
 
 
+      // on génère 3 numbers (x, y, v), si la position x, y est prise, alors on génère une nouvelle position.
+      int spawn_x = rand.nextInt(1)+1;
+      int spawn_y = rand.nextInt(1)+1;
+      double v_prob = rand.nextDouble();
+      int new_value = 0;
+      if(v_prob < 0.9){
+        new_value = 2;
+      }
+      else {
+        new_value = 4;
+      }
 
+      while(grid[spawn_x][spawn_y].getValue() != -1){
+        spawn_x = rand.nextInt(2);
+        spawn_y = rand.nextInt(2);
+        v_prob = rand.nextDouble();
+        new_value = 0;
+        if(v_prob < 0.9){
+          new_value = 2;
+        }
+        else {
+          new_value = 4;
+        }
+      }
 
+      grid[spawn_x][spawn_y] = model.intVar(new_value);
+    }
+
+    Solution solution = model.getSolver().findSolution();
+
+    if(solution != null){
+      System.out.println(solution.toString());
+    }
   }
 
 }

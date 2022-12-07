@@ -1,0 +1,12 @@
+Going by this, we realize we have as variables:
+1. A grid, defined as 16 cells (or 4 here)
+2. A list of columns in the grid
+3. A list of rows in the grid
+4. A cell as defined by (x, y, z)
+5. A list of possible values
+6. A value for empty, perhaps 0 or 999999
+7. A list of actions, right up down left
+8. A list of the position of not-empty cells for each row
+9. A list of the position of not-empty cells for each column
+10. A boolean if the grid is full (if each row is full and each column is full)
+11. A list of all opposite actions for the elimination of merged variables
