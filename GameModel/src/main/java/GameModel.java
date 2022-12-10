@@ -10,6 +10,15 @@ import java.util.Random;
 
 public class GameModel {
 
+  public static void print_board(IntVar[][] board){
+    for(int y = 0; y < 2;  y++){
+      for(int x = 0; x < 2;  x++){
+        System.out.print(board[x][y].getValue());
+        System.out.print("|");
+      }
+      System.out.print("\n");
+    }
+  }
 
   public static void main(String[] args){
     // random number generator
@@ -27,7 +36,7 @@ public class GameModel {
     SetVar oppositeMoves = model.setVar("oppositeMoves", new int[]{}, new int[]{2, 1, 4, 3});
     SetVar columns = model.setVar("columns", new int[]{}, new int[]{1, 2});
     SetVar rows = model.setVar("rows", new int[]{}, new int[]{1, 2});
-    BoolVar isAvailable = model.boolVar("isAvailable");
+    BoolVar[][] isAvailable = model.boolVarMatrix("isAvailable", 2, 2); // variable pour savoir si une tile peut être merged
 
     // Liste de moves
     IntVar[] moves = new IntVar[1000]; // maximum de 1000 moves mettons
@@ -37,21 +46,97 @@ public class GameModel {
 
     IntVar[][] grid = model.intVarMatrix("grid", 2, 2, -1, 16);
     
+    // on commence avec 2 tiles sur la grille
+    int spawn_x = rand.nextInt(1)+1;
+    int spawn_y = rand.nextInt(1)+1;
+    double v_prob = rand.nextDouble();
+    int new_value = 0;
+    if(v_prob < 0.9){
+      new_value = 2;
+    }
+    else {
+      new_value = 4;
+    }
+
+    while(grid[spawn_x][spawn_y].getValue() != -1){
+      spawn_x = rand.nextInt(2);
+      spawn_y = rand.nextInt(2);
+      v_prob = rand.nextDouble();
+      new_value = 0;
+      if(v_prob < 0.9){
+        new_value = 2;
+      }
+      else {
+        new_value = 4;
+      }
+    }
+
+    grid[spawn_x][spawn_y] = model.intVar(new_value);
+
+    spawn_x = rand.nextInt(1)+1;
+    spawn_y = rand.nextInt(1)+1;
+    v_prob = rand.nextDouble();
+    new_value = 0;
+    if(v_prob < 0.9){
+      new_value = 2;
+    }
+    else {
+      new_value = 4;
+    }
+
+    while(grid[spawn_x][spawn_y].getValue() != -1){
+      spawn_x = rand.nextInt(2);
+      spawn_y = rand.nextInt(2);
+      v_prob = rand.nextDouble();
+      new_value = 0;
+      if(v_prob < 0.9){
+        new_value = 2;
+      }
+      else {
+        new_value = 4;
+      }
+    }
+
+    grid[spawn_x][spawn_y] = model.intVar(new_value);
+
+    print_board(grid);
+
     // iteration sur chaque move
     for(int i = 1; i <= 1000; i++){
       // iteration sur chaque élément de la grille
-      for(int x = 1; x <= 2;  x++){
-        for(int y = 1; y <= 2;  y++){
-          // logique de tiles
+      int current_move = moves[i].getValue();
+          
+      if(current_move == 1){ // UP
+        for(int x = 0; x < 2;  x++){
+          for(int y = 1; y > 0;  y--){
+            // logique de tiles
+            if(grid[x][y].getValue() == grid[x][y-1].getValue() & grid[x][y].getValue() != -1){
+              grid[x][y-1] = model.intOffsetView(grid[x][y-1], grid[x][y].getValue());
+              grid[x][y] = model.intVar(-1);
+            }
+            else if(grid[x][y-1].getValue() == -1 & grid[x][y].getValue() != -1){
+              grid[x][y-1] = grid[x][y];
+              grid[x][y] = model.intVar(-1);
+            }
+          }
         }
       }
+      else if(current_move == 2){ // DOWN
 
+      }
+      else if(current_move == 3){ // LEFT
 
-      // on génère 3 numbers (x, y, v), si la position x, y est prise, alors on génère une nouvelle position.
-      int spawn_x = rand.nextInt(1)+1;
-      int spawn_y = rand.nextInt(1)+1;
-      double v_prob = rand.nextDouble();
-      int new_value = 0;
+      }
+      else{ // RIGHT
+
+      }
+      
+      System.out.println(current_move);
+
+      spawn_x = rand.nextInt(1)+1;
+      spawn_y = rand.nextInt(1)+1;
+      v_prob = rand.nextDouble();
+      new_value = 0;
       if(v_prob < 0.9){
         new_value = 2;
       }
@@ -73,6 +158,9 @@ public class GameModel {
       }
 
       grid[spawn_x][spawn_y] = model.intVar(new_value);
+
+      print_board(grid);
+      System.out.print("\n");
     }
 
     Solution solution = model.getSolver().findSolution();
