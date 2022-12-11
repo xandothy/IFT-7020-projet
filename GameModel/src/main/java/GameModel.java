@@ -71,7 +71,7 @@ public class GameModel {
     BoolVar[][] isAvailable = model.boolVarMatrix("isAvailable", 2, 2); // variable pour savoir si une tile peut être merged
     // Liste de moves
     // Create an array of 1000 moves taking their value in [1, 4]
-    IntVar[] moves = model.intVarArray("moves", 1000, 1, 4);
+    IntVar[] moves = model.intVarArray("moves", 1000, 4, 4);
     IntVar currentMaxValue = model.intVar("currentMaxValue", new int[]{2, 4, 8, 16});
 
 
@@ -139,7 +139,7 @@ public class GameModel {
         // de gauche à droite
         for(int x = 0; x < N;  x++){
           // de haut en bas
-          for(int y = 0; y < N;  y++){
+          for(int y = 0; y < N-1;  y++){
             // si deux cases dans la même colonne ont la même valeur et sont pleines
             if(grid[x][y].getValue() == grid[x][y+1].getValue() & grid[x][y].getValue() != -1){
               // intOffsetView -> addition
@@ -169,7 +169,7 @@ public class GameModel {
         // de bas en haut
         for(int y = N-1; y > 0;  y--){
           // de gauche à droite
-          for(int x = 0; x < N;  x++){
+          for(int x = 0; x < N-1;  x++){
             // si deux cases dans la même ligne ont la même valeur et sont pleines
             if(grid[x][y].getValue() == grid[x+1][y].getValue() & grid[x][y].getValue() != -1){
               // intOffsetView -> addition
@@ -199,7 +199,7 @@ public class GameModel {
         // de haut en bas
         for(int y = 0; y < N;  y++){
           // de gauche à droite
-          for(int x = 0; x < N;  x++){
+          for(int x = 0; x < N-1;  x++){
             // si deux cases dans la même ligne ont la même valeur et sont pleines
             if(grid[x+1][y].getValue() == grid[x][y].getValue() & grid[x][y].getValue() != -1){
               // intOffsetView -> addition
