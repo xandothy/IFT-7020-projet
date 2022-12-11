@@ -69,10 +69,10 @@ public class GameModel {
     SetVar columns = model.setVar("columns", new int[]{}, new int[]{1, 2});
     SetVar rows = model.setVar("rows", new int[]{}, new int[]{1, 2});
     BoolVar[][] isAvailable = model.boolVarMatrix("isAvailable", 2, 2); // variable pour savoir si une tile peut être merged
-
     // Liste de moves
     // Create an array of 1000 moves taking their value in [1, 4]
     IntVar[] moves = model.intVarArray("moves", 1000, 1, 4);
+    IntVar currentMaxValue = model.intVar("currentMaxValue", new int[]{2, 4, 8, 16});
 
 
 
@@ -99,6 +99,7 @@ public class GameModel {
 
     // iteration sur chaque move
     for(var move: moves){
+      boolean possible = false;
       // iteration sur chaque élément de la grille
       int current_move = move.getValue();
 
@@ -112,8 +113,13 @@ public class GameModel {
               // intOffsetView -> addition
               // alors on additionne leurs valeurs dans la case du dessus
               grid[x][y-1] = model.intOffsetView(grid[x][y-1], grid[x][y].getValue());
+              model.ifThen(
+                  model.arithm(grid[x][y-1], ">=", maxValue),
+                  model.arithm(maxValue, "=", grid[x][y-1])
+              );
               // et on vide la case de dessous
               grid[x][y] = model.intVar(-1);
+              possible = true;
             }
             // si la case du dessus est vide mais celle en dessous ne l'est pas
             else if(grid[x][y-1].getValue() == -1 & grid[x][y].getValue() != -1){
@@ -121,8 +127,12 @@ public class GameModel {
               grid[x][y-1] = grid[x][y];
               // puis on vide celle de dessous
               grid[x][y] = model.intVar(-1);
+              possible = true;
             }
           }
+        }
+        if (!possible){
+          System.out.println("this move won't do anything");
         }
       }
       else if(current_move == 2){ // DOWN
@@ -135,8 +145,14 @@ public class GameModel {
               // intOffsetView -> addition
               // alors on additionne leurs valeurs dans la case du dessous
               grid[x][y+1] = model.intOffsetView(grid[x][y+1], grid[x][y].getValue());
+              //on dit que la valeur maximum est la plus grande de la grille
+              model.ifThen(
+                  model.arithm(grid[x][y-1], ">=", maxValue),
+                  model.arithm(maxValue, "=", grid[x][y+1])
+              );
               // et on vide la case de dessus
               grid[x][y] = model.intVar(-1);
+              possible = true;
             }
             // si la case de dessous est vide mais celle du dessus ne l'est pas
             else if(grid[x][y+1].getValue() == -1 & grid[x][y].getValue() != -1){
@@ -144,6 +160,7 @@ public class GameModel {
               grid[x][y+1] = grid[x][y];
               // puis on vide celle du dessus
               grid[x][y] = model.intVar(-1);
+              possible = true;
             }
           }
         }
@@ -158,8 +175,14 @@ public class GameModel {
               // intOffsetView -> addition
               // alors on additionne leurs valeurs dans la case de droite
               grid[x+1][y] = model.intOffsetView(grid[x+1][y], grid[x][y].getValue());
+              //on dit que la valeur maximum est la plus grande de la grille
+              model.ifThen(
+                  model.arithm(grid[+1][y], ">=", maxValue),
+                  model.arithm(maxValue, "=", grid[x+1][y])
+              );
               // et on vide la case de gauche
               grid[x][y] = model.intVar(-1);
+              possible = true;
             }
             // si la case de droite est vide mais celle de gauche ne l'est pas
             else if(grid[x+1][y].getValue() == -1 & grid[x][y].getValue() != -1){
@@ -167,6 +190,7 @@ public class GameModel {
               grid[x+1][y] = grid[x][y];
               // puis on vide celle de gauche
               grid[x][y] = model.intVar(-1);
+              possible = true;
             }
           }
         }
@@ -181,8 +205,14 @@ public class GameModel {
               // intOffsetView -> addition
               // alors on additionne leurs valeurs dans la case de gauche
               grid[x][y] = model.intOffsetView(grid[x+1][y], grid[x][y].getValue());
+              //on dit que la valeur maximum est la plus grande de la grille
+              model.ifThen(
+                  model.arithm(grid[x][y], ">=", maxValue),
+                  model.arithm(maxValue, "=", grid[x][y])
+              );
               // et on vide la case de droite
               grid[x+1][y] = model.intVar(-1);
+              possible = true;
             }
             // si la case de gauche est vide mais celle de droite ne l'est pas
             else if(grid[x][y].getValue() == -1 & grid[x+1][y].getValue() != -1){
@@ -190,26 +220,31 @@ public class GameModel {
               grid[x][y] = grid[x+1][y];
               // puis on vide celle du droite
               grid[x+1][y] = model.intVar(-1);
+              possible = true;
             }
           }
         }
       }
 
       System.out.println(current_move);
-
-      addNewRandomTile();
-
-      while(grid[spawn_x][spawn_y].getValue() != -1){
+      if (possible){
         addNewRandomTile();
-      }
 
-      grid[spawn_x][spawn_y] = model.intVar(v);
+        while(grid[spawn_x][spawn_y].getValue() != -1){
+          addNewRandomTile();
+        }
+
+        grid[spawn_x][spawn_y] = model.intVar(v);
+      }
 
       print_board(grid);
       System.out.print("\n");
     }
 
+    model.setObjective(Model.MAXIMIZE, currentMaxValue);
+
     Solution solution = model.getSolver().findSolution();
+
 
     if(solution != null){
       System.out.println(solution.toString());
