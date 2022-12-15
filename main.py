@@ -9,7 +9,7 @@ from Board import Board
 
 
 size = 2
-moves = [0, 0, 0]
+moves = [3]
 def randomNumber():
     column = random.randint(0, size-1)
     row = random.randint(0, size-1)
