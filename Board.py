@@ -37,33 +37,33 @@ class Board:
     def moveCells(self, moves):
         for move in moves:
             if move == 0:
-                self.right()
+                self.left()
             elif move == 1:
-                self.down()
+                self.right()
             elif move == 2:
                 self.down()
             elif move == 3:
                 self.up()
             self.printCells()
 
-    def right(self):
+    def left(self):
         possible = False
         for i in range(self.size):
-            for j in reversed(range(self.size)):
+            for j in range(self.size - 1):
                 ##print(self.cells[i][j].value)
                 ##print(self.cells[i][j-1].value)
-                if self.cells[i][j].value == self.cells[i][j - 1].value and self.cells[i][j].value != -1:
-                    self.cells[i][j - 1].fill(self.cells[i][j].value * 2)
-                    self.cells[i][j].empty()
+                if self.cells[i][j].value == self.cells[i][j + 1].value and self.cells[i][j+1].value != -1:
+                    self.cells[i][j].fill(self.cells[i][j+1].value * 2)
+                    self.cells[i][j+1].empty()
                     possible = True
-                elif self.cells[i][j - 1].value == -1 and self.cells[i][j].value != -1:
-                    self.cells[i][j - 1].fill(self.cells[i][j].value)
-                    self.cells[i][j].empty()
+                elif self.cells[i][j].value == -1 and self.cells[i][j+1].value != -1:
+                    self.cells[i][j].fill(self.cells[i][j+1].value)
+                    self.cells[i][j+1].empty()
                     possible = True
         if possible == False:
             print("this move won't do anything")
 
-    def left(self):
+    def right(self):
         possible = False
         for i in range(self.size):
             for j in range(self.size -1):
