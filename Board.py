@@ -50,40 +50,67 @@ class Board:
             print(i)
 
     def moveCells(self, moves):
+        moves_done = []
+        moves_counter = 0
+
         for move in moves:
             if move == 0:
                 possible = self.left()
                 if(possible):
+                    moves_counter += 1
+                    moves_done = []
                     column, row, value = self.randomNumber()
                     filleable = self.setCell(column, row, value)
                     while (filleable == False):
                         column2, row2, value2 = self.randomNumber()
                         filleable = self.setCell(column2, row2, value2)
+                else:
+                    if 0 not in moves_done:
+                        moves_done.append(0)
             elif move == 1:
                 possible = self.right()
                 if (possible):
+                    moves_done = []
+                    moves_counter += 1
                     column, row, value = self.randomNumber()
                     filleable = self.setCell(column, row, value)
                     while (filleable == False):
                         column2, row2, value2 = self.randomNumber()
                         filleable = self.setCell(column2, row2, value2)
-
+                else:
+                    if 1 not in moves_done:
+                        moves_done.append(1)
             elif move == 2:
                 possible = self.down()
                 if (possible):
+                    moves_done = []
+                    moves_counter += 1
                     column, row, value = self.randomNumber()
                     filleable = self.setCell(column, row, value)
                     while (filleable == False):
                         column2, row2, value2 = self.randomNumber()
                         filleable = self.setCell(column2, row2, value2)
+                else:
+                    if 2 not in moves_done:
+                        moves_done.append(2)
             elif move == 3:
                 possible = self.up()
                 if (possible):
+                    moves_done = []
+                    moves_counter += 1
                     column, row, value = self.randomNumber()
                     filleable = self.setCell(column, row, value)
                     while (filleable == False):
                         column2, row2, value2 = self.randomNumber()
                         filleable = self.setCell(column2, row2, value2)
+                else:
+                    if 3 not in moves_done:
+                        moves_done.append(3)
+
+            moves_done.sort()
+
+            if [0, 1, 2, 3] == moves_done:
+                return self.highScore, moves_counter
 
             for i in range(self.size):  # line
                 for j in range(self.size):  # col
@@ -91,7 +118,7 @@ class Board:
 
             self.printCells()
             print("\n")
-        return self.highScore
+        return self.highScore, moves_counter
 
     def left(self):
         print("LEFT")

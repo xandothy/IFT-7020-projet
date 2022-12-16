@@ -8,12 +8,12 @@ from Board import Board
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 
-size = 8
+size = 5
 moves = []
 
 random.seed(694201337)
 
-for i in range(500):
+for i in range(100000):
     moves.append(random.randint(0, 3))
 
 def randomNumber():
@@ -42,13 +42,7 @@ if __name__ == '__main__':
         filleable2 = board.setCell(column2, row2, value2)
     board.printCells()
     print("Starting game")
-    highscore = board.moveCells(moves)
-    print("Game over! You made it to: " + str(highscore))
-
-
-
-
-
-
+    highscore, moves_counter = board.moveCells(moves)
+    print("Game over! You made it to: " + str(highscore) + " in " + str(moves_counter) + " moves.")
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
