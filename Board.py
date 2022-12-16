@@ -6,10 +6,15 @@ seed(694201337)
 
 class Board:
 
-    def __init__(self, size):
-        self.size = size
-        self.cells = self.generateCells()
-        self.highScore = 0
+    def __init__(self, size, copy: Board = None):
+        if copy is None:
+            self.size = size
+            self.cells = self.generateCells()
+            self.highScore = 0
+        else:
+            self.size = copy.size
+            self.cells = copy.cells
+            self.highScore = copy.highScore
 
     def randomNumber(self):
         column = randint(0, self.size-1)
@@ -49,6 +54,52 @@ class Board:
         for i in values:
             print(i)
 
+    def addNewRandomTiles(self, moves_counter):
+        moves_counter += 1
+        column, row, value = self.randomNumber()
+        filleable = self.setCell(column, row, value)
+        while not filleable:
+            column2, row2, value2 = self.randomNumber()
+            filleable = self.setCell(column2, row2, value2)
+
+    def moveCell(self, move):
+        is_moved = False
+        if move == 0:
+            possible = self.left()
+            if possible:
+                self.addNewRandomTiles(moves_counter)
+                is_moved = True
+            else:
+                if 0 not in moves_done:
+                    moves_done.append(0)
+        elif move == 1:
+            possible = self.right()
+            if possible:
+                self.addNewRandomTiles(moves_counter)
+                is_moved = True
+            else:
+                if 1 not in moves_done:
+                    moves_done.append(1)
+        elif move == 2:
+            possible = self.down()
+            if possible:
+                self.addNewRandomTiles(moves_counter)
+                is_moved = True
+            else:
+                if 2 not in moves_done:
+                    moves_done.append(2)
+        elif move == 3:
+            possible = self.up()
+            if possible:
+                self.addNewRandomTiles(moves_counter)
+                is_moved = True
+            else:
+                if 3 not in moves_done:
+                    moves_done.append(3)
+        for i in range(self.size):  # line
+            for j in range(self.size):  # col
+                self.cells[i][j].setMergeable(True)
+        return self, is_moved, self.highScore
     def moveCells(self, moves):
         moves_done = []
         moves_counter = 0
@@ -56,53 +107,29 @@ class Board:
         for move in moves:
             if move == 0:
                 possible = self.left()
-                if(possible):
-                    moves_counter += 1
-                    moves_done = []
-                    column, row, value = self.randomNumber()
-                    filleable = self.setCell(column, row, value)
-                    while (filleable == False):
-                        column2, row2, value2 = self.randomNumber()
-                        filleable = self.setCell(column2, row2, value2)
+                if possible:
+                    self.addNewRandomTiles(moves_counter)
                 else:
                     if 0 not in moves_done:
                         moves_done.append(0)
             elif move == 1:
                 possible = self.right()
-                if (possible):
-                    moves_done = []
-                    moves_counter += 1
-                    column, row, value = self.randomNumber()
-                    filleable = self.setCell(column, row, value)
-                    while (filleable == False):
-                        column2, row2, value2 = self.randomNumber()
-                        filleable = self.setCell(column2, row2, value2)
+                if possible:
+                    self.addNewRandomTiles(moves_counter)
                 else:
                     if 1 not in moves_done:
                         moves_done.append(1)
             elif move == 2:
                 possible = self.down()
-                if (possible):
-                    moves_done = []
-                    moves_counter += 1
-                    column, row, value = self.randomNumber()
-                    filleable = self.setCell(column, row, value)
-                    while (filleable == False):
-                        column2, row2, value2 = self.randomNumber()
-                        filleable = self.setCell(column2, row2, value2)
+                if possible:
+                    self.addNewRandomTiles(moves_counter)
                 else:
                     if 2 not in moves_done:
                         moves_done.append(2)
             elif move == 3:
                 possible = self.up()
-                if (possible):
-                    moves_done = []
-                    moves_counter += 1
-                    column, row, value = self.randomNumber()
-                    filleable = self.setCell(column, row, value)
-                    while (filleable == False):
-                        column2, row2, value2 = self.randomNumber()
-                        filleable = self.setCell(column2, row2, value2)
+                if possible:
+                    self.addNewRandomTiles(moves_counter)
                 else:
                     if 3 not in moves_done:
                         moves_done.append(3)
@@ -144,7 +171,7 @@ class Board:
                         self.cells[i][j-k].fill(cell.getValue()*2)
                         self.cells[i][j-k+1].empty()
                         self.cells[i][j-k].setMergeable(False)
-                        if (self.cells[i][j - k].value) > self.highScore:
+                        if self.cells[i][j - k].value > self.highScore:
                             self.highScore = self.cells[i][j - k].value
                         possible = True
 
@@ -165,7 +192,7 @@ class Board:
                         possible = True
                     """
 
-        if possible == False:
+        if not possible:
             print("this move won't do anything")
         return possible
 
@@ -193,7 +220,7 @@ class Board:
                         self.cells[i][j + k].fill(cell.getValue() * 2)
                         self.cells[i][j + k - 1].empty()
                         self.cells[i][j + k].setMergeable(False)
-                        if (self.cells[i][j + k].value) > self.highScore:
+                        if self.cells[i][j + k].value > self.highScore:
                             self.highScore = self.cells[i][j + k].value
                         possible = True
 
@@ -213,7 +240,7 @@ class Board:
                     self.cells[i][j].empty()
                     possible = True
                 """
-        if possible == False:
+        if not possible:
             print("this move won't do anything")
         return possible
 
@@ -241,7 +268,7 @@ class Board:
                         self.cells[i + k][j].fill(cell.getValue() * 2)
                         self.cells[i + k - 1][j].empty()
                         self.cells[i + k][j].setMergeable(False)
-                        if (self.cells[i + k][j].value) > self.highScore:
+                        if self.cells[i + k][j].value > self.highScore:
                             self.highScore = self.cells[i + k][j].value
                         possible = True
 
@@ -249,7 +276,7 @@ class Board:
                         cell = self.cells[i + k][j]
                     k += 1
 
-        if possible == False:
+        if not possible:
             print("this move won't do anything")
         return possible
 
@@ -285,6 +312,6 @@ class Board:
 
                     cell = self.cells[i - k][j]
                     k += 1
-        if possible == False:
+        if not possible:
             print("this move won't do anything")
         return possible
