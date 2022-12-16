@@ -1,7 +1,8 @@
-from random import random, randint
+from random import random, randint, seed
 
 from Cell import Cell
 
+seed(694201337)
 
 class Board:
 
@@ -14,10 +15,10 @@ class Board:
         column = randint(0, 1)
         row = randint(0, 1)
         value = 0
-        generator = randint(0, 1)
-        if generator == 0:
+        generator = random()
+        if generator < 0.9:
             value = 2
-        elif generator == 1:
+        else:
             value = 4
         return column, row, value
 

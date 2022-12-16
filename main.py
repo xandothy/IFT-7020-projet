@@ -10,14 +10,16 @@ from Board import Board
 
 size = 2
 moves = [0, 2, 3, 6, 1, 3, 2, 2, 1, 2, 1, 0, 3, 2, 2, 1, 0, 1, 0, 2, 3, 3, 2]
+random.seed(694201337)
+
 def randomNumber():
     column = random.randint(0, size-1)
     row = random.randint(0, size-1)
     value = 0
-    generator = random.randint(0,1)
-    if generator == 0:
+    generator = random.random()
+    if generator < 0.9:
         value = 2
-    elif generator == 1:
+    else:
         value = 4
     return column, row, value
 
