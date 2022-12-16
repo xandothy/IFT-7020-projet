@@ -6,7 +6,7 @@ from Board import Board
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
-
+win_condition  = 2048
 size = 4
 moves = []
 number_of_simulation = 40
@@ -28,7 +28,10 @@ def print_move_name_by_index(move):
         print("UP")
 
 def is_Win(board):
-    if board.highScore == 2048:
+    if win_condition == -1:
+        return False
+
+    if board.highScore == win_condition:
         return True
     else:
         return False
