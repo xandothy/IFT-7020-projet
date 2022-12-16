@@ -7,7 +7,7 @@ from Board import Board
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 
-size = 5
+size = 4
 moves = []
 number_of_simulation = 40
 search_length = 30
@@ -26,6 +26,7 @@ def print_move_name_by_index(move):
         print("DOWN")
     elif move == 3:
         print("UP")
+
 def is_Win(board):
     if board.highScore == 2048:
         return True
@@ -52,7 +53,7 @@ def monteCarloMove(board, number_of_simulation, search_length):
             first_move_scores[first_move_index] += first_move_score
         else:
             continue
-        for _ in range(number_of_simulation):
+        for p in range(number_of_simulation):
             move_number = 1
             search_bord = Board(size, board)
             is_valid = True
@@ -62,7 +63,7 @@ def monteCarloMove(board, number_of_simulation, search_length):
                     first_move_scores[first_move_index] += score
                     move_number += 1
     best_move_index = np.argmax(first_move_scores)
-    search_bord, is_valid, score = search_bord.moveCell(best_move_index)
+    search_bord, is_valid, score = board.moveCell(best_move_index)
     print_move_name_by_index(best_move_index)
     return search_bord, is_valid
 

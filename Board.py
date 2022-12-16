@@ -1,6 +1,6 @@
 from random import random, randint, seed
 import copy as c
-
+import numpy as np
 from Cell import Cell
 
 seed(694201337)
@@ -17,6 +17,15 @@ class Board:
             self.size = copy.size
             self.cells = c.deepcopy(copy.cells)
             self.highScore = c.deepcopy(copy.highScore)
+
+
+    def has_empty_cells(self):
+        for i in range(self.size):  # line
+            for j in range(self.size):  # col
+                if self.cells[i][j].getValue() == -1:
+                    return True
+
+        return False
 
     def randomNumber(self):
         column = randint(0, self.size - 1)
@@ -72,6 +81,9 @@ class Board:
             move = move_order[move_index]
             board, move_made, score = self.moveCell(move)
             if move_made:
+                if not self.has_empty_cells():
+                    break
+
                 self.addNewRandomTiles()
                 return board, True, score
             move_order.pop(move_index)
@@ -106,6 +118,7 @@ class Board:
         for i in range(self.size):  # line
             for j in range(self.size):  # col
                 self.cells[i][j].setMergeable(True)
+
         return self, is_moved, self.highScore
 
     def moveCells(self, moves):
