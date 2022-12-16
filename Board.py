@@ -4,6 +4,7 @@ import numpy as np
 from Cell import Cell
 
 seed(694201337)
+np.random.seed(694201337)
 
 
 class Board:
@@ -84,7 +85,6 @@ class Board:
                 if not self.has_empty_cells():
                     break
 
-                self.addNewRandomTiles()
                 return board, True, score
             move_order.pop(move_index)
         return board, False, score
@@ -217,8 +217,8 @@ class Board:
                         possible = True
                     """
 
-        if not possible:
-            print("this move won't do anything")
+        # if not possible:
+        #     print("this move won't do anything")
         return possible
 
     def right(self):
@@ -265,8 +265,8 @@ class Board:
                     self.cells[i][j].empty()
                     possible = True
                 """
-        if not possible:
-            print("this move won't do anything")
+        # if not possible:
+        #     print("this move won't do anything")
         return possible
 
     def down(self):
@@ -301,8 +301,8 @@ class Board:
                         cell = self.cells[i + k][j]
                     k += 1
 
-        if not possible:
-            print("this move won't do anything")
+        # if not possible:
+        #     print("this move won't do anything")
         return possible
 
     def up(self):
@@ -337,6 +337,6 @@ class Board:
 
                     cell = self.cells[i - k][j]
                     k += 1
-        if not possible:
-            print("this move won't do anything")
+        # if not possible:
+        #     print("this move won't do anything")
         return possible

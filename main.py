@@ -45,21 +45,21 @@ def randomNumber():
     return column, row, value
 
 def monteCarloMove(board, number_of_simulation, search_length):
-    possible_first_moves = [0, 1, 2, 3]
     first_move_scores = np.zeros(4)
     for first_move_index in range(4):
-        board_with_first_move, first_move_made, first_move_score = board.moveCell(first_move_index)
+        board_with_first_move, first_move_made, first_move_score = Board(size, board).moveCell(first_move_index)
         if first_move_made:
             first_move_scores[first_move_index] += first_move_score
         else:
             continue
         for p in range(number_of_simulation):
             move_number = 1
-            search_bord = Board(size, board)
+            search_bord = Board(size, board_with_first_move)
             is_valid = True
             while is_valid and move_number < search_length:
                 search_bord, is_valid, score = search_bord.moveRandom()
                 if is_valid:
+
                     first_move_scores[first_move_index] += score
                     move_number += 1
     best_move_index = np.argmax(first_move_scores)
