@@ -1,4 +1,4 @@
-# TP 1 : Signatures basées sur le hachage
+# Projet: Résoudre 2048 à l'aide d'une recherche Monte Carlo
 
 
 ## Configuration de l'environnement de travail
