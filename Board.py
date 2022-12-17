@@ -340,3 +340,11 @@ class Board:
         # if not possible:
         #     print("this move won't do anything")
         return possible
+
+    def get_cells_score(self):
+        total_score = 0
+        for i in range(self.size):  # line
+            for j in range(self.size):  # col
+                total_score += self.cells[i][j].getValue()
+
+        return total_score

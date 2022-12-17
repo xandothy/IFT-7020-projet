@@ -6,13 +6,15 @@ from Board import Board
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
-win_condition  = 2048
+win_condition = -1
 size = 4
 moves = []
 number_of_simulation = 40
 search_length = 30
+weights = [2., 1., 2., 1.]  # on priorise left et down
+nb_moves = [0, 0, 0, 0]
 
-random.seed(69420132)
+random.seed(694201337)
 
 for i in range(100000):
     moves.append(random.randint(0, 3))
@@ -26,6 +28,8 @@ def print_move_name_by_index(move):
         print("DOWN")
     elif move == 3:
         print("UP")
+
+    nb_moves[move] += 1
 
 def is_Win(board):
     if win_condition == -1:
@@ -65,6 +69,8 @@ def monteCarloMove(board, number_of_simulation, search_length):
 
                     first_move_scores[first_move_index] += score
                     move_number += 1
+    first_move_scores = np.array([a*b for a, b in zip(first_move_scores, weights)])
+
     best_move_index = np.argmax(first_move_scores)
     search_bord, is_valid, score = board.moveCell(best_move_index)
     print_move_name_by_index(best_move_index)
@@ -104,6 +110,7 @@ if __name__ == '__main__':
     # highscore, moves_counter = board.moveCells(moves)
     highscore, moves_counter = monteCarlo(board)
 
-    print("Game over! You made it to: " + str(highscore) + " in " + str(moves_counter) + " moves.")
+    print("Game over! You made it to: " + str(highscore) + " in " + str(moves_counter) + " moves.  You got a total score of " + str(board.get_cells_score()) + ".")
+    print(f"Nb moves: LEFT: {nb_moves[0]}\nRIGHT: {nb_moves[1]}\nDOWN: {nb_moves[2]}\nUP: {nb_moves[3]}\n")
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
