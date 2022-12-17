@@ -3,8 +3,8 @@ import copy as c
 import numpy as np
 from Cell import Cell
 
-seed(694201337)
-np.random.seed(694201337)
+# seed(694201337)
+# np.random.seed(694201337)
 
 
 class Board:
@@ -82,8 +82,8 @@ class Board:
             move = move_order[move_index]
             board, move_made, score = self.moveCell(move)
             if move_made:
-                if not self.has_empty_cells():
-                    break
+                # if not self.has_empty_cells():
+                #     break
 
                 return board, True, score
             move_order.pop(move_index)
@@ -217,8 +217,6 @@ class Board:
                         possible = True
                     """
 
-        # if not possible:
-        #     print("this move won't do anything")
         return possible
 
     def right(self):
@@ -253,20 +251,6 @@ class Board:
                         cell = self.cells[i][j + k]
                     k += 1
 
-                """
-                if self.cells[i][j].value == self.cells[i][j + 1].value and self.cells[i][j].value != -1:
-                    self.cells[i][j + 1].fill(self.cells[i][j].value * 2)
-                    self.cells[i][j].empty()
-                    if (self.cells[i][j-1].value) > self.highScore:
-                        self.highScore = self.cells[i][j-1].value
-                    possible = True
-                elif self.cells[i][j + 1].value == -1 and self.cells[i][j].value != -1:
-                    self.cells[i][j + 1].fill(self.cells[i][j].value)
-                    self.cells[i][j].empty()
-                    possible = True
-                """
-        # if not possible:
-        #     print("this move won't do anything")
         return possible
 
     def down(self):
@@ -301,8 +285,6 @@ class Board:
                         cell = self.cells[i + k][j]
                     k += 1
 
-        # if not possible:
-        #     print("this move won't do anything")
         return possible
 
     def up(self):
@@ -337,8 +319,7 @@ class Board:
 
                     cell = self.cells[i - k][j]
                     k += 1
-        # if not possible:
-        #     print("this move won't do anything")
+
         return possible
 
     def get_cells_score(self):

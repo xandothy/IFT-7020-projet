@@ -2,19 +2,21 @@
 import random
 import numpy as np
 from Board import Board
+import time
+import matplotlib.pyplot as plt
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
+experience_number = 5
 win_condition = -1
 size = 4
 moves = []
 number_of_simulation = 40
 search_length = 30
-weights = [2., 1., 2., 1.]  # on priorise left et down
+weights = [1., 1., 1., 1.]  # on priorise left et down
 nb_moves = [0, 0, 0, 0]
 
-random.seed(694201337)
+# random.seed(694201337)
 
 for i in range(100000):
     moves.append(random.randint(0, 3))
@@ -73,7 +75,7 @@ def monteCarloMove(board, number_of_simulation, search_length):
 
     best_move_index = np.argmax(first_move_scores)
     search_bord, is_valid, score = board.moveCell(best_move_index)
-    print_move_name_by_index(best_move_index)
+    # print_move_name_by_index(best_move_index)
     return search_bord, is_valid
 
 def monteCarlo(board):
@@ -85,7 +87,7 @@ def monteCarlo(board):
         if is_Win(board):
             is_valid = False
 
-        board.printCells()
+        # board.printCells()
     return board.highScore, move_count
 
 
@@ -95,22 +97,42 @@ def monteCarlo(board):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    board = Board(size, None)
-    board.printCells()
-    column1, row1, value1 = randomNumber()
-    column2, row2, value2 = randomNumber()
-    filleable = board.setCell(column1, row1, value1)
-    filleable2 = board.setCell(column2, row2, value2)
-    print("Filling the board on first try")
-    while (filleable2 == False):
+    scores = []
+    moves = []
+    cell_scores = []
+    for _ in range(experience_number):
+        board = Board(size, None)
+        board.printCells()
+        column1, row1, value1 = randomNumber()
         column2, row2, value2 = randomNumber()
+        filleable = board.setCell(column1, row1, value1)
         filleable2 = board.setCell(column2, row2, value2)
-    board.printCells()
-    print("Starting game")
-    # highscore, moves_counter = board.moveCells(moves)
-    highscore, moves_counter = monteCarlo(board)
+        print("Filling the board on first try")
+        while (filleable2 == False):
+            column2, row2, value2 = randomNumber()
+            filleable2 = board.setCell(column2, row2, value2)
+        board.printCells()
+        print("Starting game")
+        # highscore, moves_counter = board.moveCells(moves)
+        start = time.time()
+        highscore, moves_counter = monteCarlo(board)
+        end = time.time()
+        elapsed = end - start
+        print("Game over! You made it to: " + str(highscore) + " in " + str(moves_counter) + " moves.  You got a total score of " + str(board.get_cells_score()) + ".")
+        print(f"Nb moves: LEFT: {nb_moves[0]}\nRIGHT: {nb_moves[1]}\nDOWN: {nb_moves[2]}\nUP: {nb_moves[3]}\n")
+        print(f"time elapsed: {elapsed}s")
 
-    print("Game over! You made it to: " + str(highscore) + " in " + str(moves_counter) + " moves.  You got a total score of " + str(board.get_cells_score()) + ".")
-    print(f"Nb moves: LEFT: {nb_moves[0]}\nRIGHT: {nb_moves[1]}\nDOWN: {nb_moves[2]}\nUP: {nb_moves[3]}\n")
+        scores.append(highscore)
+        moves.append(moves_counter)
+        cell_scores.append(board.get_cells_score())
 
+    plt.figure()
+    plt.plot(range(experience_number), [x for x in scores], label='Score')
+    plt.plot(range(experience_number), [y for y in moves], label='Nombre de Move')
+    plt.plot(range(experience_number), [z for z in cell_scores], label='Score Total')
+    plt.title("Métrique de la résolution de 2048 avec la recherche d'arbre Monte Carlo")
+    plt.xlabel("Nombre d'expérience")
+    plt.ylabel('Métrique')
+    plt.legend()
+    plt.show()
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
