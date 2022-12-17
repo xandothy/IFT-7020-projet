@@ -204,19 +204,6 @@ class Board:
                     cell = self.cells[i][j - k]
                     k += 1
 
-                    """
-                    if self.cells[i][j].value == self.cells[i][j + 1].value and self.cells[i][j+1].value != -1:
-                        self.cells[i][j].fill(self.cells[i][j+1].value * 2)
-                        self.cells[i][j+1].empty()
-                        if (self.cells[i][j+1].value) > self.highScore:
-                            self.highScore = self.cells[i][j+1].value
-                        possible = True
-                    elif self.cells[i][j].value == -1 and self.cells[i][j+1].value != -1:
-                        self.cells[i][j].fill(self.cells[i][j+1].value)
-                        self.cells[i][j+1].empty()
-                        possible = True
-                    """
-
         return possible
 
     def right(self):
