@@ -1,19 +1,16 @@
-# This is a sample Python script.
 import random
 import numpy as np
 from Board import Board
 import time
 import matplotlib.pyplot as plt
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-experience_number = 5
+experience_number = 10
 win_condition = -1
 size = 4
 moves = []
 number_of_simulation = 40
 search_length = 30
-weights = [1., 1., 1., 1.]  # on priorise left et down
+weights = [1.1, 1., 1.1, 1.]  # on priorise left et down
 nb_moves = [0, 0, 0, 0]
 
 # random.seed(694201337)
@@ -90,12 +87,6 @@ def monteCarlo(board):
         # board.printCells()
     return board.highScore, move_count
 
-
-
-
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     scores = []
     moves = []
@@ -127,12 +118,11 @@ if __name__ == '__main__':
         cell_scores.append(board.get_cells_score())
 
     plt.figure()
-    plt.plot(range(experience_number), [x for x in scores], label='Score')
-    plt.plot(range(experience_number), [y for y in moves], label='Nombre de Move')
-    plt.plot(range(experience_number), [z for z in cell_scores], label='Score Total')
-    plt.title("Métrique de la résolution de 2048 avec la recherche d'arbre Monte Carlo")
+    plt.plot(scores, label='Score')
+    plt.plot(moves, label='Nombre de Move')
+    plt.plot(cell_scores, label='Score Total')
+    plt.title("Métrique de la résolution de 2048 avec la recherche d'arbre Monte Carlo avec poids")
     plt.xlabel("Nombre d'expérience")
     plt.ylabel('Métrique')
     plt.legend()
     plt.show()
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
